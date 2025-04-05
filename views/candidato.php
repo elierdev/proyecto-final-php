@@ -88,8 +88,11 @@ if (!$conexion || $conexion->connect_error) {
                         if ($result) {
                             while ($row = $result->fetch_assoc()) {
                                 echo "<div class='box'>";
-                                echo "<h3 class='title is-5'>" . htmlspecialchars($row['titulo']) . "</h3>";
+                                echo "<h3 class='title is-5 p-0 m-0'>" . htmlspecialchars($row['titulo']) . "</h3>";
                                 echo "<p>" . htmlspecialchars($row['descripcion']) . "</p>";
+                                echo "<hr>";
+                                echo "<h4 class='text'>" . htmlspecialchars($row['fecha_publicacion']) . "</h4>";
+                                echo "<h4 class='button'>" . htmlspecialchars($row['salario']) . "</h4>";
                                 echo "<form action='aplicar.php' method='POST'>";
                                 echo "<input type='hidden' name='oferta_id' value='" . $row['id'] . "'>";
                                 echo "<button class='button is-success mt-2' type='submit'>Postularme</button>";
