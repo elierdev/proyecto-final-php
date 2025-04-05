@@ -2,17 +2,22 @@
 require_once('../configs/db_configs.php');
 session_start();
 
+// Verificar si el usuario está logueado
 if (empty($_SESSION['userId'])) {
+    header("Location: ../index.php");
+    exit;
+} elseif ($_SESSION['userRole'] !== "candidato") {
     header("Location: ../index.php");
     exit;
 }
 
 $userId = $_SESSION['userId'];
 
-// Verifica si la conexión a la base de datos está establecida
+// Verificar la conexión a la base de datos
 if (!$conexion || $conexion->connect_error) {
     die("Error: No se pudo conectar a la base de datos. " . $conexion->connect_error);
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -34,32 +39,40 @@ if (!$conexion || $conexion->connect_error) {
             <div class="columns">
                 <!-- Currículum -->
                 <div class="column is-one-third">
-                    <h2 class="title">Currículum del Candidato</h2>
-                    <div class="box">
+                    <h2 class="title">Mi Currículum</h2>
+                    <div class="box" style="background-color:rgb(39, 59, 210);">
                         <?php
-                        // Consulta a la base de datos
+                        // Consulta a la base de datos, usando usuario_id para obtener el currículum del usuario actual
                         $sql = "SELECT * FROM curriculum WHERE id = $userId";
                         $result = $conexion->query($sql);
                         if ($result && $row = $result->fetch_assoc()) {
-                            // Mostrar la foto
-                            echo '<figure class="image is-128x128">';
-                            echo '<img src="data:image/jpeg;base64,' . base64_encode($row['foto']) . '" alt="Foto del candidato">';
-                            echo '</figure>';
+                            // Mostrar la foto si existe
+                            $fotoRuta = $row['foto'];  // Asumiendo que 'foto' contiene la ruta de la imagen
+                            if (file_exists($fotoRuta)) {
+                                echo '<figure class="image is-128x128">';
+                                echo '<img class="is-rounded" src="' . htmlspecialchars($fotoRuta) . '" alt="Foto del candidato" style="width: 128px; height: 128px; object-fit: cover;">';
+                                echo '</figure>';
+                            } else {
+                                // Imagen predeterminada si no existe la foto
+                                echo '<figure class="image is-128x128 is-rounded">';
+                                echo '<img class="is-rounded" src="../uploads/default.png" alt="Foto del candidato" style="width: 128px; height: 128px; object-fit: cover;">';
+                                echo '</figure>';
+                            }
 
-                            // Mostrar los demás campos
+                            // Mostrar los demás campos del currículum
                             echo '<h3 class="title is-4">' . htmlspecialchars($row['nombre']) . ' ' . htmlspecialchars($row['apellido']) . '</h3>';
                             echo '<p><strong>Correo Electrónico:</strong> ' . htmlspecialchars($row['correo_electronico']) . '</p>';
                             echo '<p><strong>Teléfono:</strong> ' . htmlspecialchars($row['telefono']) . '</p>';
                             echo '<p><strong>Dirección:</strong> ' . htmlspecialchars($row['direccion']) . ', ' . htmlspecialchars($row['ciudad_provincia']) . '</p>';
-                            echo '<p><strong>Formación Académica:</strong> ' . htmlspecialchars($row['formacion_academica']) . '</p>';
-                            echo '<p><strong>Experiencia Laboral:</strong> ' . htmlspecialchars($row['experiencia_laboral']) . '</p>';
-                            echo '<p><strong>Habilidades Clave:</strong> ' . htmlspecialchars($row['habilidades_clave']) . '</p>';
-                            echo '<p><strong>Idiomas:</strong> ' . htmlspecialchars($row['idiomas']) . '</p>';
-                            echo '<p><strong>Objetivo Profesional:</strong> ' . htmlspecialchars($row['objetivo_profesional']) . '</p>';
-                            echo '<p><strong>Logros y Proyectos:</strong> ' . htmlspecialchars($row['logros_proyectos']) . '</p>';
+                            echo '<p><strong>Formación Académica:</strong> ' . nl2br(htmlspecialchars($row['formacion_academica'])) . '</p>';
+                            echo '<p><strong>Experiencia Laboral:</strong> ' . nl2br(htmlspecialchars($row['experiencia_laboral'])) . '</p>';
+                            echo '<p><strong>Habilidades Clave:</strong> ' . nl2br(htmlspecialchars($row['habilidades_clave'])) . '</p>';
+                            echo '<p><strong>Idiomas:</strong> ' . nl2br(htmlspecialchars($row['idiomas'])) . '</p>';
+                            echo '<p><strong>Objetivo Profesional:</strong> ' . nl2br(htmlspecialchars($row['objetivo_profesional'])) . '</p>';
+                            echo '<p><strong>Logros y Proyectos:</strong> ' . nl2br(htmlspecialchars($row['logros_proyectos'])) . '</p>';
                             echo '<p><strong>Disponibilidad:</strong> ' . htmlspecialchars($row['disponibilidad']) . '</p>';
-                            echo '<p><strong>Redes Profesionales:</strong> ' . htmlspecialchars($row['redes_profesionales']) . '</p>';
-                            echo '<p><strong>Referencias:</strong> ' . htmlspecialchars($row['referencias']) . '</p>';
+                            echo '<p><strong>Redes Profesionales:</strong> ' . nl2br(htmlspecialchars($row['redes_profesionales'])) . '</p>';
+                            echo '<p><strong>Referencias:</strong> ' . nl2br(htmlspecialchars($row['referencias'])) . '</p>';
                         } else {
                             echo '<p>No se encontró información del candidato.</p>';
                         }

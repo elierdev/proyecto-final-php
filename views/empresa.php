@@ -4,6 +4,9 @@ session_start();
 if (empty($_SESSION['userId'])) {
     header("Location: ../index.php");
     exit;
+} elseif ($_SESSION['userRole'] !== "empresa") {
+    header("Location: ../index.php");
+    exit;
 }
 
 // Procesar formulario de publicación de vacantes

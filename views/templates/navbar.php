@@ -1,6 +1,6 @@
 <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-        <a href="/" class="navbar-item">
+        <a href="" class="navbar-item">
             <img src="../../logo.png" alt="Logo" >
         </a>
     </div>
