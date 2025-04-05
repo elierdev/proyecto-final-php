@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bind_param("sss", $name, $email, $password);
 
             if ($stmt->execute()) {
-                echo "<script>alert('Registro exitoso.'); window.location.href = 'crear_cv.php';</script>";
+                echo "<script>window.location.href = 'crear_cv.php';</script>";
                 exit;
             } else {
                 $error = '
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bind_param("ssss", $companyName, $contact, $email, $password);
 
             if ($stmt->execute()) {
-                echo "<script>alert('Registro exitoso.'); window.location.href = 'empresa.php';</script>";
+                echo "<script>window.location.href = 'empresa.php';</script>";
                 exit;
             } else {
                 $error = '

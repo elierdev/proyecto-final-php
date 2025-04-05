@@ -3,10 +3,7 @@ require_once('../configs/db_configs.php');
 session_start();
 
 // Verificar si el usuario está logueado
-if (empty($_SESSION['userId'])) {
-    header("Location: ../index.php");
-    exit;
-} elseif ($_SESSION['userRole'] !== "candidato") {
+if ($_SESSION['userRole'] !== "candidato") {
     header("Location: ../index.php");
     exit;
 }

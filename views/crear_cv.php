@@ -3,6 +3,7 @@ require_once('../configs/db_configs.php');
 session_start();
 
 
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Validar y obtener los datos del formulario
     $nombre = $_POST['nombre'] ?? null;
@@ -71,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     );
 
     if ($stmt->execute()) {
-        echo "<script>alert('Currículum guardado exitosamente.'); window.location.href='candidato.php';</script>";
+        echo "<script>window.location.href='candidato.php';</script>";
     } else {
         echo "Error al guardar el currículum: " . $stmt->error;
     }

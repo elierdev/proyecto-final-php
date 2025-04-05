@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['userName'] = $nombre;
                 $_SESSION['userRole'] = "candidato";
 
-                echo "<script>alert('Bienvenido de nuevo, $nombre'); window.location.href='views/candidato.php';</script>";
+                echo "<script>window.location.href='views/candidato.php';</script>";
                 exit;
             } else {
                 $error = '
@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['userName'] = $nombre_empresa;
                     $_SESSION['userRole'] = "empresa";
 
-                    echo "<script>alert('Bienvenido de nuevo, $nombre_empresa'); window.location.href='views/empresa.php';</script>";
+                    echo "<script>window.location.href='views/empresa.php';</script>";
                     exit;
                 } else {
                     $error = '

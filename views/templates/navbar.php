@@ -3,6 +3,7 @@
         <a href="" class="navbar-item">
             <img src="../../logo.png" alt="Logo" >
         </a>
+        
     </div>
 
     <div id="navbarBasicExample" class="navbar-menu">

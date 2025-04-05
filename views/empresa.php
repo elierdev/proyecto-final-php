@@ -69,7 +69,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <section class="section">
         <div class="container">
-            <h1 class="title">Publicar Vacante</h1>
+            <h1 class="title"> <?php echo htmlspecialchars($_SESSION['userName']); ?></h1>
+            <h2 class="title">Publicar Vacante</h2>
             <form method="POST">
                 <div class="field">
                     <label class="label">Título del Puesto</label>
@@ -112,6 +113,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             </form>
         </div>
+    </section>
+    <section class="section">
+        <?php include "postulaciones.php"; ?>
     </section>
 </body>
 
