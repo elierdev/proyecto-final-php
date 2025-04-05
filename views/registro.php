@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->bind_param("ssss", $companyName, $contact, $email, $password);
 
             if ($stmt->execute()) {
-                echo "<script>alert('Registro exitoso.'); window.location.href = '../index.php';</script>";
+                echo "<script>alert('Registro exitoso.'); window.location.href = 'empresa.php';</script>";
                 exit;
             } else {
                 $error = '

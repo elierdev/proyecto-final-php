@@ -1,10 +1,7 @@
 <?php
-require_once('../configs/db_configs.php'); 
+require_once('../configs/db_configs.php');
 session_start();
-if (empty($_SESSION['userId'])) {
-    header("Location: ../index.php");
-    exit;
-}
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Validar y obtener los datos del formulario
@@ -24,23 +21,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $redes_profesionales = $_POST['redes_profesionales'] ?? null;
     $referencias = $_POST['referencias'] ?? null;
 
-    // Preparar la consulta SQL (sin archivos)
+    // Subida de imagen
+    $fotoRuta = null;
+    if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
+        $nombreArchivo = $_FILES['foto']['name'];
+        $temporal = $_FILES['foto']['tmp_name'];
+        $carpetaDestino = '../uploads/';
+
+        if (!file_exists($carpetaDestino)) {
+            mkdir($carpetaDestino, 0777, true);
+        }
+
+        $fotoRuta = $carpetaDestino . uniqid() . "_" . basename($nombreArchivo);
+        move_uploaded_file($temporal, $fotoRuta);
+    }
+
+    // Preparar la consulta SQL
     $sql = "INSERT INTO curriculum (
                 nombre, apellido, correo_electronico, telefono, direccion, ciudad_provincia, 
                 formacion_academica, experiencia_laboral, habilidades_clave, idiomas, 
                 objetivo_profesional, logros_proyectos, disponibilidad, redes_profesionales, 
-                referencias
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                referencias, foto
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    // Crear una declaración preparada
     $stmt = $conexion->prepare($sql);
+
     if (!$stmt) {
         die("Error al preparar la consulta: " . $conexion->error);
     }
 
-    // Vincular parámetros
     $stmt->bind_param(
-        "sssssssssssssss",
+        "ssssssssssssssss",
         $nombre,
         $apellido,
         $correo_electronico,
@@ -55,23 +66,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $logros_proyectos,
         $disponibilidad,
         $redes_profesionales,
-        $referencias
+        $referencias,
+        $fotoRuta
     );
 
-    // Ejecutar la consulta
     if ($stmt->execute()) {
         echo "<script>alert('Currículum guardado exitosamente.'); window.location.href='candidato.php';</script>";
     } else {
         echo "Error al guardar el currículum: " . $stmt->error;
     }
 
-    // Cerrar la declaración y la conexión
     $stmt->close();
     $conexion->close();
 }
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="es" data-theme="dark">
@@ -108,19 +116,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <label class="label">Redes Profesionales: <br><textarea class="textarea" style="resize: none" name="redes_profesionales"></textarea class="textarea" style="resize: none"></label>
         <label class="label">Referencias: <br><textarea class="textarea" style="resize: none" name="referencias"></textarea class="textarea" style="resize: none"></label>
         <label for="cv_pdf" class="label">Suba su Currículum en PDF: <br></label>
-        <div class="file">
-            <label class="file-label" name="cv_pdf">
-                <input class="file-input" type="file" name="cv_pdf" />
-                    <span class="file-cta">
-                        <span class="file-icon">
-                            <i class="fas fa-upload"></i>
-                        </span>
-                    <span class="file-label"> Elija un archivo... </span>
-                </span>
-            </label>
-        </div>
+        <!-- SUBIR UNA IMAGEN -->
         <label for="foto" class="label">Suba su foto: <br></label>
-        <div class="file has-name">
+        <div class="file has-name" id="fotoUpload">
             <label class="file-label">
                 <input class="file-input" type="file" name="foto" />
                     <span class="file-cta">
@@ -134,6 +132,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
         <button class="button is-primary"type="submit">Guardar Currículum</button>
     </form>
+    <script>
+        const fileInput = document.querySelector("#fotoUpload input[type=file]");
+        fileInput.onchange = () => {
+            if (fileInput.files.length > 0) {
+            const fileName = document.querySelector("#fotoUpload .file-name");
+            fileName.textContent = fileInput.files[0].name;
+            }
+        };
+    </script>
 </body>
 
 </html>

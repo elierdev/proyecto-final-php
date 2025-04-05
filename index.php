@@ -1,7 +1,6 @@
 <?php
 require_once('configs/db_configs.php');
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['IniciarSesion'])) { // Nombre del botón corregido para evitar problemas con espacios
         // Obtener los datos del formulario
